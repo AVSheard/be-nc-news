@@ -25,7 +25,8 @@ exports.seed = function(knex) {
 						.returning("*");
 				})
 				.then((articleRows) => {
-					console.log(articleRows);
+					const refObj = makeRefObj(articleRows);
+					console.log(refObj);
 					/* 
 
       Your comment data is currently in the incorrect format and will violate your SQL schema. 

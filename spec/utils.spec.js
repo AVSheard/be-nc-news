@@ -160,7 +160,7 @@ describe("formatDates", () => {
 	});
 });
 
-describe.only("makeRefObj", () => {
+describe("makeRefObj", () => {
 	it("returns an empty object when passed an empty array", () => {
 		const actual = makeRefObj([]);
 		const expected = {};
@@ -295,4 +295,218 @@ describe.only("makeRefObj", () => {
 	});
 });
 
-describe("formatComments", () => {});
+describe.only("formatComments", () => {
+	it("returns an array when passed an array", () => {
+		const actual = formatComments([]);
+		const expected = [];
+		expect(actual).to.eql(expected);
+	});
+	it("can change created_by key to author key for one object ", () => {
+		const actual = formatComments(
+			[
+				{
+					body:
+						"Itaque quisquam est similique et est perspiciatis reprehenderit voluptatem autem. Voluptatem accusantium eius error adipisci quibusdam doloribus.",
+					belongs_to:
+						"The People Tracking Every Touch, Pass And Tackle in the World Cup",
+					created_by: "tickle122",
+					votes: -1,
+					created_at: 1468087638932
+				}
+			],
+			{
+				"The People Tracking Every Touch, Pass And Tackle in the World Cup": 18
+			}
+		);
+		const expected = [
+			{
+				body:
+					"Itaque quisquam est similique et est perspiciatis reprehenderit voluptatem autem. Voluptatem accusantium eius error adipisci quibusdam doloribus.",
+				belongs_to:
+					"The People Tracking Every Touch, Pass And Tackle in the World Cup",
+				author: "tickle122",
+				votes: -1,
+				created_at: 1468087638932
+			}
+		];
+		expect(actual[0].author).to.eql(expected[0].author);
+	});
+	it("can reformat the date for one object", () => {
+		const actual = formatComments(
+			[
+				{
+					body:
+						"Itaque quisquam est similique et est perspiciatis reprehenderit voluptatem autem. Voluptatem accusantium eius error adipisci quibusdam doloribus.",
+					belongs_to:
+						"The People Tracking Every Touch, Pass And Tackle in the World Cup",
+					created_by: "tickle122",
+					votes: -1,
+					created_at: 0
+				}
+			],
+			{
+				"The People Tracking Every Touch, Pass And Tackle in the World Cup": 18
+			}
+		);
+		const expected = [
+			{
+				body:
+					"Itaque quisquam est similique et est perspiciatis reprehenderit voluptatem autem. Voluptatem accusantium eius error adipisci quibusdam doloribus.",
+				belongs_to:
+					"The People Tracking Every Touch, Pass And Tackle in the World Cup",
+				author: "tickle122",
+				votes: -1,
+				created_at: "Thu, 01 Jan 1970 00:00:00 GMT"
+			}
+		];
+		expect(actual[0].created_at).to.eql(expected[0].created_at);
+	});
+	it("can change belongs_to to article_id for one object", () => {
+		const actual = formatComments(
+			[
+				{
+					body:
+						"Itaque quisquam est similique et est perspiciatis reprehenderit voluptatem autem. Voluptatem accusantium eius error adipisci quibusdam doloribus.",
+					belongs_to:
+						"The People Tracking Every Touch, Pass And Tackle in the World Cup",
+					created_by: "tickle122",
+					votes: -1,
+					created_at: 0
+				}
+			],
+			{
+				"The People Tracking Every Touch, Pass And Tackle in the World Cup": 18
+			}
+		);
+		const expected = [
+			{
+				body:
+					"Itaque quisquam est similique et est perspiciatis reprehenderit voluptatem autem. Voluptatem accusantium eius error adipisci quibusdam doloribus.",
+				article_id: 18,
+				author: "tickle122",
+				votes: -1,
+				created_at: "Thu, 01 Jan 1970 00:00:00 GMT"
+			}
+		];
+		expect(actual[0].article_id).to.eql(expected[0].article_id);
+	});
+	it("can reformat data for multiple objects", () => {
+		const actual = formatComments(
+			[
+				{
+					body:
+						"Itaque quisquam est similique et est perspiciatis reprehenderit voluptatem autem. Voluptatem accusantium eius error adipisci quibusdam doloribus.",
+					belongs_to: "D",
+					created_by: "tickle122",
+					votes: -1,
+					created_at: 0
+				},
+				{
+					body:
+						"Nobis consequatur animi. Ullam nobis quaerat voluptates veniam.",
+					belongs_to: "A",
+					created_by: "grumpy19",
+					votes: 7,
+					created_at: 0
+				},
+				{
+					body:
+						"Qui sunt sit voluptas repellendus sed. Voluptatem et repellat fugiat. Rerum doloribus eveniet quidem vero aut sint officiis. Dolor facere et et architecto vero qui et perferendis dolorem. Magni quis ratione adipisci error assumenda ut. Id rerum eos facere sit nihil ipsam officia aspernatur odio.",
+					belongs_to: "B",
+					created_by: "grumpy19",
+					votes: 3,
+					created_at: 0
+				}
+			],
+			{
+				D: 18,
+				A: 1,
+				B: 2
+			}
+		);
+		const expected = [
+			{
+				body:
+					"Itaque quisquam est similique et est perspiciatis reprehenderit voluptatem autem. Voluptatem accusantium eius error adipisci quibusdam doloribus.",
+				article_id: 18,
+				author: "tickle122",
+				votes: -1,
+				created_at: "Thu, 01 Jan 1970 00:00:00 GMT"
+			},
+			{
+				body: "Nobis consequatur animi. Ullam nobis quaerat voluptates veniam.",
+				article_id: 1,
+				author: "grumpy19",
+				votes: 7,
+				created_at: "Thu, 01 Jan 1970 00:00:00 GMT"
+			},
+			{
+				body:
+					"Qui sunt sit voluptas repellendus sed. Voluptatem et repellat fugiat. Rerum doloribus eveniet quidem vero aut sint officiis. Dolor facere et et architecto vero qui et perferendis dolorem. Magni quis ratione adipisci error assumenda ut. Id rerum eos facere sit nihil ipsam officia aspernatur odio.",
+				article_id: 2,
+				author: "grumpy19",
+				votes: 3,
+				created_at: "Thu, 01 Jan 1970 00:00:00 GMT"
+			}
+		];
+		expect(actual).to.eql(expected);
+	});
+	it("does not mutate the input array", () => {
+		const input = [
+			{
+				body:
+					"Itaque quisquam est similique et est perspiciatis reprehenderit voluptatem autem. Voluptatem accusantium eius error adipisci quibusdam doloribus.",
+				belongs_to: "D",
+				created_by: "tickle122",
+				votes: -1,
+				created_at: 0
+			},
+			{
+				body: "Nobis consequatur animi. Ullam nobis quaerat voluptates veniam.",
+				belongs_to: "A",
+				created_by: "grumpy19",
+				votes: 7,
+				created_at: 0
+			},
+			{
+				body:
+					"Qui sunt sit voluptas repellendus sed. Voluptatem et repellat fugiat. Rerum doloribus eveniet quidem vero aut sint officiis. Dolor facere et et architecto vero qui et perferendis dolorem. Magni quis ratione adipisci error assumenda ut. Id rerum eos facere sit nihil ipsam officia aspernatur odio.",
+				belongs_to: "B",
+				created_by: "grumpy19",
+				votes: 3,
+				created_at: 0
+			}
+		];
+		formatComments(input, {
+			D: 18,
+			A: 1,
+			B: 2
+		});
+		const control = [
+			{
+				body:
+					"Itaque quisquam est similique et est perspiciatis reprehenderit voluptatem autem. Voluptatem accusantium eius error adipisci quibusdam doloribus.",
+				belongs_to: "D",
+				created_by: "tickle122",
+				votes: -1,
+				created_at: 0
+			},
+			{
+				body: "Nobis consequatur animi. Ullam nobis quaerat voluptates veniam.",
+				belongs_to: "A",
+				created_by: "grumpy19",
+				votes: 7,
+				created_at: 0
+			},
+			{
+				body:
+					"Qui sunt sit voluptas repellendus sed. Voluptatem et repellat fugiat. Rerum doloribus eveniet quidem vero aut sint officiis. Dolor facere et et architecto vero qui et perferendis dolorem. Magni quis ratione adipisci error assumenda ut. Id rerum eos facere sit nihil ipsam officia aspernatur odio.",
+				belongs_to: "B",
+				created_by: "grumpy19",
+				votes: 3,
+				created_at: 0
+			}
+		];
+		expect(input).to.eql(control);
+	});
+});
