@@ -9,7 +9,10 @@ exports.formatDates = (list) => {
 };
 
 exports.makeRefObj = (list) => {
-	return {};
+	return list.reduce((refObj, article) => {
+		refObj[article.title] = article.article_id;
+		return refObj;
+	}, {});
 };
 
 exports.formatComments = (comments, articleRef) => {};

@@ -180,7 +180,118 @@ describe.only("makeRefObj", () => {
 			}
 		]);
 		const expected = { "Running a Node App": 1 };
-		expect(actual);
+		expect(actual).to.eql(expected);
+	});
+	it("returns object of key value pairs for array with multiple entrys", () => {
+		const actual = makeRefObj([
+			{
+				article_id: 1,
+				title: "Running a Node App",
+				body:
+					"This is part two of a series on how to get up and running with Systemd and Node.js. This part dives deeper into how to successfully run your app with systemd long-term, and how to set it up in a production environment.",
+				votes: 0,
+				topic: "coding",
+				author: "jessjelly",
+				created_at: "2016-08-18T12:07:52.000Z"
+			},
+			{
+				article_id: 2,
+				title:
+					"The Rise Of Thinking Machines: How IBM's Watson Takes On The World",
+				body:
+					"Many people know Watson as the IBM-developed cognitive super computer that won the Jeopardy! gameshow in 2011. In truth, Watson is not actually a computer but a set of algorithms and APIs, and since winning TV fame (and a $1 million prize) IBM has put it to use tackling tough problems in every industry from healthcare to finance. Most recently, IBM has announced several new partnerships which aim to take things even further, and put its cognitive capabilities to use solving a whole new range of problems around the world.",
+				votes: 0,
+				topic: "coding",
+				author: "jessjelly",
+				created_at: "2017-07-20T20:57:53.000Z"
+			},
+			{
+				article_id: 6,
+				title: "22 Amazing open source React projects",
+				body:
+					"This is a collection of open source apps built with React.JS library. In this observation, we compared nearly 800 projects to pick the top 22. (React Native: 11, React: 11). To evaluate the quality, Mybridge AI considered a variety of factors to determine how useful the projects are for programmers. To give you an idea on the quality, the average number of Github stars from the 22 projects was 1,681.",
+				votes: 0,
+				topic: "coding",
+				author: "happyamy2016",
+				created_at: "2017-07-21T17:54:10.000Z"
+			}
+		]);
+		const expected = {
+			"Running a Node App": 1,
+			"The Rise Of Thinking Machines: How IBM's Watson Takes On The World": 2,
+			"22 Amazing open source React projects": 6
+		};
+		expect(actual).to.eql(expected);
+	});
+	it("does not mutate the input array", () => {
+		const input = [
+			{
+				article_id: 1,
+				title: "Running a Node App",
+				body:
+					"This is part two of a series on how to get up and running with Systemd and Node.js. This part dives deeper into how to successfully run your app with systemd long-term, and how to set it up in a production environment.",
+				votes: 0,
+				topic: "coding",
+				author: "jessjelly",
+				created_at: "2016-08-18T12:07:52.000Z"
+			},
+			{
+				article_id: 2,
+				title:
+					"The Rise Of Thinking Machines: How IBM's Watson Takes On The World",
+				body:
+					"Many people know Watson as the IBM-developed cognitive super computer that won the Jeopardy! gameshow in 2011. In truth, Watson is not actually a computer but a set of algorithms and APIs, and since winning TV fame (and a $1 million prize) IBM has put it to use tackling tough problems in every industry from healthcare to finance. Most recently, IBM has announced several new partnerships which aim to take things even further, and put its cognitive capabilities to use solving a whole new range of problems around the world.",
+				votes: 0,
+				topic: "coding",
+				author: "jessjelly",
+				created_at: "2017-07-20T20:57:53.000Z"
+			},
+			{
+				article_id: 6,
+				title: "22 Amazing open source React projects",
+				body:
+					"This is a collection of open source apps built with React.JS library. In this observation, we compared nearly 800 projects to pick the top 22. (React Native: 11, React: 11). To evaluate the quality, Mybridge AI considered a variety of factors to determine how useful the projects are for programmers. To give you an idea on the quality, the average number of Github stars from the 22 projects was 1,681.",
+				votes: 0,
+				topic: "coding",
+				author: "happyamy2016",
+				created_at: "2017-07-21T17:54:10.000Z"
+			}
+		];
+		makeRefObj(input);
+		const control = [
+			{
+				article_id: 1,
+				title: "Running a Node App",
+				body:
+					"This is part two of a series on how to get up and running with Systemd and Node.js. This part dives deeper into how to successfully run your app with systemd long-term, and how to set it up in a production environment.",
+				votes: 0,
+				topic: "coding",
+				author: "jessjelly",
+				created_at: "2016-08-18T12:07:52.000Z"
+			},
+			{
+				article_id: 2,
+				title:
+					"The Rise Of Thinking Machines: How IBM's Watson Takes On The World",
+				body:
+					"Many people know Watson as the IBM-developed cognitive super computer that won the Jeopardy! gameshow in 2011. In truth, Watson is not actually a computer but a set of algorithms and APIs, and since winning TV fame (and a $1 million prize) IBM has put it to use tackling tough problems in every industry from healthcare to finance. Most recently, IBM has announced several new partnerships which aim to take things even further, and put its cognitive capabilities to use solving a whole new range of problems around the world.",
+				votes: 0,
+				topic: "coding",
+				author: "jessjelly",
+				created_at: "2017-07-20T20:57:53.000Z"
+			},
+			{
+				article_id: 6,
+				title: "22 Amazing open source React projects",
+				body:
+					"This is a collection of open source apps built with React.JS library. In this observation, we compared nearly 800 projects to pick the top 22. (React Native: 11, React: 11). To evaluate the quality, Mybridge AI considered a variety of factors to determine how useful the projects are for programmers. To give you an idea on the quality, the average number of Github stars from the 22 projects was 1,681.",
+				votes: 0,
+				topic: "coding",
+				author: "happyamy2016",
+				created_at: "2017-07-21T17:54:10.000Z"
+			}
+		];
+		expect(input).to.eql(control);
 	});
 });
 
