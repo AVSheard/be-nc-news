@@ -7,8 +7,8 @@ const getAllTopics = () => {
 		.select("*")
 		.from("topics")
 		.returning("*")
-		.then((topics) => {
-			console.log(topics);
+		.then((requestedTopics) => {
+			return { topics: requestedTopics };
 		});
 };
 
