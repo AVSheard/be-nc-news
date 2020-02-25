@@ -46,4 +46,24 @@ describe("/api", () => {
 				});
 		});
 	});
+
+	describe("/articles", () => {
+		it.only("GET - 200 for a requesting an article by article_id", () => {
+			return request(app)
+				.get("/api/articles/3")
+				.expect(200)
+				.then((res) => {
+					expect(res.body.user[0]).to.have.all.keys([
+						"author",
+						"title",
+						"article_id",
+						"body",
+						"topic",
+						"created_at",
+						"votes",
+						"comment_count"
+					]);
+				});
+		});
+	});
 });
