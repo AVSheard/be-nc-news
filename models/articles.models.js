@@ -2,6 +2,22 @@
 
 const connection = require("../db/connection");
 
-const getArticle = () => {};
+const getArticle = (id) => {
+	return connection.select("*").from();
+};
 
-module.exports = { getArticle };
+const patchArticle = () => {};
+
+const getArticleComments = () => {};
+
+const postArticleComment = () => {};
+
+const getArticles = () => {};
+
+module.exports = {
+	getArticle,
+	patchArticle,
+	getArticleComments,
+	postArticleComment,
+	getArticles
+};
