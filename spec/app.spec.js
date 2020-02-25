@@ -25,6 +25,25 @@ describe("/api", () => {
 	});
 
 	describe("/user", () => {
-		it("GET - 200 for sucessful requestfor list of topics", () => {});
+		it("GET - 200 for sucessful request for a user by username", () => {
+			return request(app)
+				.get("/api/users/butter_bridge")
+				.expect(200)
+				.then((res) => {
+					expect(res.body.user[0]).to.have.all.keys([
+						"username",
+						"avatar_url",
+						"name"
+					]);
+				});
+		});
+		it("GET - 404 for requesting a user with a username that dose not exist", () => {
+			return request(app)
+				.get("/api/users/NOT-A-USERNAME")
+				.expect(404)
+				.then((res) => {
+					expect(res.body.msg).to.equal("Username does not exist");
+				});
+		});
 	});
 });
