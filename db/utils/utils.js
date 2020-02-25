@@ -8,6 +8,8 @@ exports.formatDates = (list) => {
 	});
 };
 
-exports.makeRefObj = (list) => {};
+exports.makeRefObj = (list) => {
+	return {};
+};
 
 exports.formatComments = (comments, articleRef) => {};
