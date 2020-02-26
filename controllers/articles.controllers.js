@@ -39,9 +39,25 @@ const uploadArticleComment = (request, response, next) => {
 };
 
 const requestArticleComments = (request, response, next) => {
-	getArticleComments(request.params.article_id).then((insertedComments) => {
-		response.status(200).send({ comments: insertedComments });
-	});
+	let sort_by;
+	let order;
+	if (request.query.sort_by) {
+		sort_by = request.query.sort_by;
+	} else {
+		sort_by = "created_at";
+	}
+	if (request.query.order) {
+		order = request.query.order;
+	} else {
+		order = "desc";
+	}
+	getArticleComments(request.params.article_id, sort_by, order)
+		.then((articleComments) => {
+			response.status(200).send({ comments: articleComments });
+		})
+		.catch((err) => {
+			next(err);
+		});
 };
 
 const requestArticles = (request, response, next) => {};

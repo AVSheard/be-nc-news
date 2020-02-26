@@ -6,6 +6,7 @@ const { expect } = chai;
 const request = require("supertest");
 const app = require("../app");
 const connection = require("../db/connection");
+chai.use(require("sams-chai-sorted"));
 
 describe("/api", () => {
 	beforeEach(() => connection.seed.run());
@@ -234,6 +235,42 @@ describe("/api", () => {
 							"article_id"
 						]);
 					});
+				});
+		});
+		it("GET - 200 can return comments in descending created_at order by default", () => {
+			return request(app)
+				.get("/api/articles/1/comments")
+				.expect(200)
+				.then((res) => {
+					expect(res.body.comments).to.be.sortedBy("created_at", {
+						descending: true
+					});
+				});
+		});
+		it("GET - 200 can return comments in author order", () => {
+			return request(app)
+				.get("/api/articles/1/comments/?sort_by=author")
+				.expect(200)
+				.then((res) => {
+					expect(res.body.comments).to.be.sortedBy("author", {
+						descending: true
+					});
+				});
+		});
+		it("GET - 200 can return comments in acending order", () => {
+			return request(app)
+				.get("/api/articles/1/comments/?order=asc")
+				.expect(200)
+				.then((res) => {
+					expect(res.body.comments).to.be.sortedBy("created_at");
+				});
+		});
+		it("GET - 200 can return comments in acending order by author", () => {
+			return request(app)
+				.get("/api/articles/1/comments/?sort_by=author&order=asc")
+				.expect(200)
+				.then((res) => {
+					expect(res.body.comments).to.be.sortedBy("author");
 				});
 		});
 	});

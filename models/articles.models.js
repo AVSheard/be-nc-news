@@ -89,11 +89,12 @@ const postArticleComment = (id, commentInfo) => {
 		});
 };
 
-const getArticleComments = (id) => {
+const getArticleComments = (id, sort_by, order) => {
 	return connection
 		.select("*")
 		.from("comments")
-		.where("article_id", id);
+		.where("article_id", id)
+		.orderBy(sort_by, order);
 };
 
 const getArticles = () => {};
