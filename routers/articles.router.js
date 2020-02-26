@@ -9,8 +9,10 @@ const {
 	requestArticles
 } = require("../controllers/articles.controllers");
 
-articlesRouter.get("/:article_id", requestArticle);
-articlesRouter.patch("/:article_id", updateArticle);
+articlesRouter
+	.route("/:article_id")
+	.get(requestArticle)
+	.patch(updateArticle);
 
 articlesRouter.get("/articles_id/comments", requestArticleComments);
 articlesRouter.post("/articles_id/comments", uploadArticleComment);
