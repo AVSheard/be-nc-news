@@ -19,6 +19,6 @@ articlesRouter
 	.get(requestArticleComments)
 	.post(uploadArticleComment);
 
-articlesRouter.get("/", requestArticles);
+articlesRouter.route("/").get(requestArticles);
 
 module.exports = articlesRouter;

@@ -94,7 +94,10 @@ const getArticleComments = (id, sort_by, order) => {
 		.select("*")
 		.from("comments")
 		.where("article_id", id)
-		.orderBy(sort_by, order);
+		.orderBy(sort_by, order)
+		.catch((err) => {
+			return Promise.reject({ status: 400, msg: "Bad Request" });
+		});
 };
 
 const getArticles = () => {};

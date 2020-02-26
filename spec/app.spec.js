@@ -273,5 +273,47 @@ describe("/api", () => {
 					expect(res.body.comments).to.be.sortedBy("author");
 				});
 		});
+		it("GET - 404 for an article_id that does not exist", () => {
+			return request(app)
+				.get("/api/articles/9999/comments")
+				.expect(404)
+				.then((res) => {
+					expect(res.body.msg).to.equal("Article_id does not exist");
+				});
+		});
+		it("GET - 400 for an invalid article_id", () => {
+			return request(app)
+				.get("/api/articles/INVALID-ARTICLE_ID/comments")
+				.expect(400)
+				.then((res) => {
+					expect(res.body.msg).to.equal("Bad Request");
+				});
+		});
+		it("GET - 404 for a sort_by query that does not exist", () => {
+			return request(app)
+				.get("/api/articles/3/comments/?sort_by=NOT_A_COLUMN")
+				.expect(400)
+				.then((res) => {
+					expect(res.body.msg).to.equal("Bad Request");
+				});
+		});
+		it.only("GET - 200 when returning the articles", () => {
+			return request(app)
+				.get("/api/articles")
+				.expect(200)
+				.then((res) => {
+					res.body.artics.forEach((comment) => {
+						expect(comment).to.have.all.keys([
+							"author",
+							"title",
+							"topic",
+							"created_at",
+							"votes",
+							"article_id",
+							"comment_count"
+						]);
+					});
+				});
+		});
 	});
 });

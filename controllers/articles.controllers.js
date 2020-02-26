@@ -53,6 +53,12 @@ const requestArticleComments = (request, response, next) => {
 	}
 	getArticleComments(request.params.article_id, sort_by, order)
 		.then((articleComments) => {
+			if (articleComments.length === 0) {
+				return Promise.reject({
+					status: 404,
+					msg: "Article_id does not exist"
+				});
+			}
 			response.status(200).send({ comments: articleComments });
 		})
 		.catch((err) => {
@@ -60,7 +66,9 @@ const requestArticleComments = (request, response, next) => {
 		});
 };
 
-const requestArticles = (request, response, next) => {};
+const requestArticles = (request, response, next) => {
+	getArticles();
+};
 
 module.exports = {
 	requestArticle,
