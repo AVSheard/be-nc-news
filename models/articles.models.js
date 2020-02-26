@@ -3,6 +3,7 @@
 const connection = require("../db/connection");
 
 const getArticle = (id) => {
+	console.log(id);
 	return connection.select("*").from();
 };
 

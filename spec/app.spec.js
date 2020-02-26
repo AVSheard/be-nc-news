@@ -48,12 +48,12 @@ describe("/api", () => {
 	});
 
 	describe("/articles", () => {
-		it.only("GET - 200 for a requesting an article by article_id", () => {
+		it.only("GET - 200 for requesting an article by article_id", () => {
 			return request(app)
 				.get("/api/articles/3")
 				.expect(200)
 				.then((res) => {
-					expect(res.body.user[0]).to.have.all.keys([
+					expect(res.body.user).to.have.all.keys([
 						"author",
 						"title",
 						"article_id",
@@ -65,5 +65,40 @@ describe("/api", () => {
 					]);
 				});
 		});
+		// it("GET - 404 for requesting an article with an article_id that does not exist", () => {
+		// 	return request(app)
+		// 		.get("/api/articles/9999999999999")
+		// 		.expect(404)
+		// 		.then((res) => {
+		// 			expect(res.body.msg).to.equal("Article_id does not exist");
+		// 		});
+		// });
+		// it("GET - 400 for requesting an article with an invalid article_id", () => {
+		// 	return request(app)
+		// 		.get("/api/articles/INVALID-ARTICLE_ID")
+		// 		.expect(400)
+		// 		.then((res) => {
+		// 			expect(res.body.msg).to.equal("Invalid article_id");
+		// 		});
+		// });
+		// it("PATCH - 201 for a requesting that the votes are changed on an article", () => {
+		// 	let vote = { inc_votes: 200 };
+		// 	return request(app)
+		// 		.patch("/api/articles/1")
+		// 		.expect(201)
+		// 		.then((res) => {
+		// 			expect(res.body.user[0]).to.have.all.keys([
+		// 				"author",
+		// 				"title",
+		// 				"article_id",
+		// 				"body",
+		// 				"topic",
+		// 				"created_at",
+		// 				"votes",
+		// 				"comment_count"
+		// 			]);
+		// 			expect(res.body.user[0].votes).to.equal(300);
+		// 		});
+		// });
 	});
 });
