@@ -14,8 +14,10 @@ articlesRouter
 	.get(requestArticle)
 	.patch(updateArticle);
 
-articlesRouter.get("/articles_id/comments", requestArticleComments);
-articlesRouter.post("/articles_id/comments", uploadArticleComment);
+articlesRouter
+	.route("/:article_id/comments")
+	.get(requestArticleComments)
+	.post(uploadArticleComment);
 
 articlesRouter.get("/", requestArticles);
 

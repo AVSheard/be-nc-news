@@ -60,9 +60,41 @@ const patchArticle = (id, voteChange) => {
 		});
 };
 
-const getArticleComments = () => {};
+const postArticleComment = (id, commentInfo) => {
+	if (!commentInfo.username || !commentInfo.body) {
+		return Promise.reject({
+			status: 422,
+			msg: "Incomplete data for creating comment"
+		});
+	}
+	const insertInfo = {
+		...commentInfo,
+		article_id: id,
+		author: commentInfo.username
+	};
+	delete insertInfo.username;
+	return connection
+		.into("comments")
+		.insert(insertInfo)
+		.returning("*")
+		.catch((err) => {
+			if (isNaN(Number(id))) {
+				return Promise.reject({ status: 400, msg: "Invalid article_id" });
+			} else {
+				return Promise.reject({
+					status: 404,
+					msg: "Article_id does not exist"
+				});
+			}
+		});
+};
 
-const postArticleComment = () => {};
+const getArticleComments = (id) => {
+	return connection
+		.select("*")
+		.from("comments")
+		.where("article_id", id);
+};
 
 const getArticles = () => {};
 

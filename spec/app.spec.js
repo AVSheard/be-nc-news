@@ -81,7 +81,7 @@ describe("/api", () => {
 					expect(res.body.msg).to.equal("Invalid article_id");
 				});
 		});
-		it("PATCH - 201 for a requesting that the votes are changed on an article", () => {
+		it("PATCH - 201 for a request that the votes are changed on an article", () => {
 			let vote = { inc_votes: 200 };
 			return request(app)
 				.patch("/api/articles/1")
@@ -137,6 +137,103 @@ describe("/api", () => {
 				.expect(422)
 				.then((res) => {
 					expect(res.body.msg).to.equal("No data for changing votes given");
+				});
+		});
+		it("POST - 201 for a request to add a new comment", () => {
+			let commentInfo = {
+				username: "butter_bridge",
+				body: "I wanted to say something"
+			};
+			return request(app)
+				.post("/api/articles/1/comments")
+				.send(commentInfo)
+				.expect(201)
+				.then((res) => {
+					expect(res.body.comment).to.have.all.keys([
+						"author",
+						"comment_id",
+						"body",
+						"created_at",
+						"votes",
+						"article_id"
+					]);
+					expect(res.body.comment.author).to.equal("butter_bridge");
+					expect(res.body.comment.body).to.equal("I wanted to say something");
+				});
+		});
+		it("POST - 404 for an article_id that does not exist", () => {
+			let commentInfo = {
+				username: "butter_bridge",
+				body: "I wanted to say something"
+			};
+			return request(app)
+				.post("/api/articles/9999/comments")
+				.send(commentInfo)
+				.expect(404)
+				.then((res) => {
+					expect(res.body.msg).to.equal("Article_id does not exist");
+				});
+		});
+		it("POST - 400 for an invalid article_id", () => {
+			let commentInfo = {
+				username: "butter_bridge",
+				body: "I wanted to say something"
+			};
+			return request(app)
+				.post("/api/articles/INVALID-ARTICLE_ID/comments")
+				.send(commentInfo)
+				.expect(400)
+				.then((res) => {
+					expect(res.body.msg).to.equal("Invalid article_id");
+				});
+		});
+		it("POST - 422 when body is missing from request body", () => {
+			let commentInfo = {
+				body: "I wanted to say something"
+			};
+			return request(app)
+				.post("/api/articles/2/comments")
+				.send(commentInfo)
+				.expect(422)
+				.then((res) => {
+					expect(res.body.msg).to.equal("Incomplete data for creating comment");
+				});
+		});
+		it("POST - 422 when username is missing from request body", () => {
+			let commentInfo = {
+				username: "butter_bridge"
+			};
+			return request(app)
+				.post("/api/articles/2/comments")
+				.send(commentInfo)
+				.expect(422)
+				.then((res) => {
+					expect(res.body.msg).to.equal("Incomplete data for creating comment");
+				});
+		});
+		it("POST - 422 when request body is missing", () => {
+			return request(app)
+				.post("/api/articles/2/comments")
+				.expect(422)
+				.then((res) => {
+					expect(res.body.msg).to.equal("Incomplete data for creating comment");
+				});
+		});
+		it("GET - 200 when returning the comments from an article", () => {
+			return request(app)
+				.get("/api/articles/1/comments")
+				.expect(200)
+				.then((res) => {
+					res.body.comments.forEach((comment) => {
+						expect(comment).to.have.all.keys([
+							"author",
+							"comment_id",
+							"body",
+							"created_at",
+							"votes",
+							"article_id"
+						]);
+					});
 				});
 		});
 	});

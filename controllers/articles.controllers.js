@@ -3,7 +3,7 @@
 const {
 	getArticle,
 	patchArticle,
-	getArtileComments,
+	getArticleComments,
 	postArticleComment,
 	getArticles
 } = require("../models/articles.models");
@@ -28,9 +28,21 @@ const updateArticle = (request, response, next) => {
 		});
 };
 
-const requestArticleComments = (request, response, next) => {};
+const uploadArticleComment = (request, response, next) => {
+	postArticleComment(request.params.article_id, request.body)
+		.then((insertedComment) => {
+			response.status(201).send({ comment: insertedComment[0] });
+		})
+		.catch((err) => {
+			next(err);
+		});
+};
 
-const uploadArticleComment = (request, response, next) => {};
+const requestArticleComments = (request, response, next) => {
+	getArticleComments(request.params.article_id).then((insertedComments) => {
+		response.status(200).send({ comments: insertedComments });
+	});
+};
 
 const requestArticles = (request, response, next) => {};
 
