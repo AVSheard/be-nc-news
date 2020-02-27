@@ -7,6 +7,7 @@ const {
 	postArticleComment,
 	getArticles
 } = require("../models/articles.models");
+const { doesItemExist } = require("../models/middleWare.models");
 
 const requestArticle = (request, response, next) => {
 	getArticle(request.params.article_id)

@@ -1,6 +1,7 @@
 /** @format */
 
 const connection = require("../db/connection");
+const { doesItemExist } = require("./middleWare.models");
 
 const getArticle = (id) => {
 	id = Number(id);
@@ -106,6 +107,9 @@ const getArticles = (
 	reqAuthor,
 	reqTopic
 ) => {
+	if (order !== "desc" && order !== "asc") {
+		return Promise.reject({ status: 400, msg: "Invalid order method" });
+	}
 	return connection
 		.select("articles.*")
 		.from("articles")
@@ -122,7 +126,14 @@ const getArticles = (
 			}
 		})
 		.then((articles) => {
-			articles.forEach((article) => delete article.body);
+			if (articles.length === 0 && reqAuthor) {
+				return Promise.reject({ status: 404, msg: "Author does not exist" });
+			} else if (articles.length === 0 && reqTopic) {
+				return Promise.reject({ status: 404, msg: "Topic does not exist" });
+			}
+			articles.forEach((article) => {
+				delete article.body;
+			});
 			return articles;
 		});
 };

@@ -1,10 +1,10 @@
 /** @format */
-
 const { expect } = require("chai");
 const {
 	formatDates,
 	makeRefObj,
-	formatComments
+	formatComments,
+	doesItemExist
 } = require("../db/utils/utils");
 
 describe("formatDates", () => {
@@ -295,7 +295,7 @@ describe("makeRefObj", () => {
 	});
 });
 
-describe.only("formatComments", () => {
+describe("formatComments", () => {
 	it("returns an array when passed an array", () => {
 		const actual = formatComments([]);
 		const expected = [];

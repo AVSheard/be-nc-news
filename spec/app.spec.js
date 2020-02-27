@@ -5,6 +5,7 @@ const chai = require("chai");
 const { expect } = chai;
 const request = require("supertest");
 const app = require("../app");
+const { doesItemExist } = require("../models/middleWare.models");
 const connection = require("../db/connection");
 chai.use(require("sams-chai-sorted"));
 
@@ -353,7 +354,7 @@ describe("/api", () => {
 					});
 				});
 		});
-		it.only("GET - 200 returns articles and filters by topic and author", () => {
+		it("GET - 200 returns articles and filters by topic and author", () => {
 			return request(app)
 				.get("/api/articles/?topic=mitch&author=butter_bridge")
 				.expect(200)
@@ -364,5 +365,60 @@ describe("/api", () => {
 					});
 				});
 		});
+		it("GET - 404 for an invalid author query", () => {
+			return request(app)
+				.get("/api/articles?author=NOT_AN_AUTHOR")
+				.expect(404)
+				.then((res) => {
+					expect(res.body.msg).to.equal("Author does not exist");
+				});
+		});
+		it("GET - 404 for an invalid topic query", () => {
+			return request(app)
+				.get("/api/articles?topic=NOT_A_TOPIC")
+				.expect(404)
+				.then((res) => {
+					expect(res.body.msg).to.equal("Topic does not exist");
+				});
+		});
+		it("GET - 400 for requesting an order that does not exist", () => {
+			return request(app)
+				.get("/api/articles?order=NOT_AN_ORDER")
+				.expect(400)
+				.then((res) => {
+					expect(res.body.msg).to.equal("Invalid order method");
+				});
+		});
+		// it.only("GET - 400 for requesting a sort_by that does not exist", () => {
+		// 	return request(app)
+		// 		.get("/api/articles?sort_by=NOT_A_COLUMN")
+		// 		.expect(400)
+		// 		.then((res) => {
+		// 			expect(res.body.msg).to.equal("Invalid sort_by method");
+		// 		});
+		// });
 	});
 });
+
+// describe("middleWare", () => {
+// 	beforeEach(() => connection.seed.run());
+// 	after(() => connection.destroy());
+
+// 	describe("doesItemExist", () => {
+// 		it("returns a boolean when passed three srings", () => {
+// 			return doesItemExist("paper", "slug", "topics").then((actual) => {
+// 				expect(typeof actual).to.equal("boolean");
+// 			});
+// 		});
+// 		it("returns true when the item exists", () => {
+// 			return doesItemExist("paper", "slug", "topics").then((actual) => {
+// 				expect(actual).to.equal(true);
+// 			});
+// 		});
+// 		it("returns false when the item does not exists", () => {
+// 			return doesItemExist("NOT-AN-ITEM", "slug", "topics").then((actual) => {
+// 				expect(actual).to.equal(false);
+// 			});
+// 		});
+// 	});
+// });
