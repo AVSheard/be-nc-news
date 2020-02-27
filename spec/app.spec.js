@@ -434,44 +434,48 @@ describe("/api", () => {
 						expect(res.body.comment.votes).to.equal(13);
 					});
 			});
-			// it("PATCH - 404 for an comment_id that does not exist", () => {
-			// 	let vote = { inc_votes: 200 };
-			// 	return request(app)
-			// 		.patch("/api/comments/9999")
-			// 		.send(vote)
-			// 		.expect(404)
-			// 		.then((res) => {
-			// 			expect(res.body.msg).to.equal("Comment_id does not exist");
-			// 		});
-			// });
-			// it("PATCH - 400 for an invalid article_id", () => {
-			// 	let vote = { inc_votes: 200 };
-			// 	return request(app)
-			// 		.patch("/api/articles/INVALID-ARTICLE_ID")
-			// 		.send(vote)
-			// 		.expect(400)
-			// 		.then((res) => {
-			// 			expect(res.body.msg).to.equal("Invalid article_id");
-			// 		});
-			// });
-			// it("PATCH - 422 for missing inc_votes data", () => {
-			// 	return request(app)
-			// 		.patch("/api/articles/2")
-			// 		.expect(422)
-			// 		.then((res) => {
-			// 			expect(res.body.msg).to.equal("No data for changing votes given");
-			// 		});
-			// });
-			// it("PATCH - 422 for invalid inc_votes data", () => {
-			// 	let vote = { inc_votes: "Invalid_ENTRY" };
-			// 	return request(app)
-			// 		.patch("/api/articles/2")
-			// 		.send(vote)
-			// 		.expect(422)
-			// 		.then((res) => {
-			// 			expect(res.body.msg).to.equal("No data for changing votes given");
-			// 		});
-			// });
+			it("PATCH - 404 for an comment_id that does not exist", () => {
+				let vote = { inc_votes: 200 };
+				return request(app)
+					.patch("/api/comments/9999")
+					.send(vote)
+					.expect(404)
+					.then((res) => {
+						expect(res.body.msg).to.equal("Comment_id does not exist");
+					});
+			});
+			it("PATCH - 400 for an invalid article_id", () => {
+				let vote = { inc_votes: 200 };
+				return request(app)
+					.patch("/api/comments/INVALID-ARTICLE_ID")
+					.send(vote)
+					.expect(400)
+					.then((res) => {
+						expect(res.body.msg).to.equal("Invalid article_id");
+					});
+			});
+			it("PATCH - 422 for missing inc_votes data", () => {
+				return request(app)
+					.patch("/api/comments/2")
+					.expect(422)
+					.then((res) => {
+						expect(res.body.msg).to.equal(
+							"No data for changing votes has been given"
+						);
+					});
+			});
+			it("PATCH - 422 for invalid inc_votes data", () => {
+				let vote = { inc_votes: "Invalid_ENTRY" };
+				return request(app)
+					.patch("/api/comments/2")
+					.send(vote)
+					.expect(422)
+					.then((res) => {
+						expect(res.body.msg).to.equal(
+							"Invalid data for changing votes given"
+						);
+					});
+			});
 			it("DELETE - 204 when successfuly deleted a comment", () => {
 				return request(app)
 					.delete("/api/comments/1")
