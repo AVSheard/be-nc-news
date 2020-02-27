@@ -397,6 +397,87 @@ describe("/api", () => {
 		// 			expect(res.body.msg).to.equal("Invalid sort_by method");
 		// 		});
 		// });
+		describe.only("/comments", () => {
+			it("PATCH - 201 when changed the vote on a comment", () => {
+				const vote = { inc_votes: 1 };
+				return request(app)
+					.patch("/api/comments/1")
+					.send(vote)
+					.expect(201)
+					.then((res) => {
+						expect(res.body.comment).to.have.all.keys([
+							"author",
+							"created_at",
+							"votes",
+							"article_id",
+							"body",
+							"comment_id"
+						]);
+						expect(res.body.comment.votes).to.equal(17);
+					});
+			});
+			it("PATCH - 201 when changed the vote on a comment negativley", () => {
+				const vote = { inc_votes: -3 };
+				return request(app)
+					.patch("/api/comments/1")
+					.send(vote)
+					.expect(201)
+					.then((res) => {
+						expect(res.body.comment).to.have.all.keys([
+							"author",
+							"created_at",
+							"votes",
+							"article_id",
+							"body",
+							"comment_id"
+						]);
+						expect(res.body.comment.votes).to.equal(13);
+					});
+			});
+			// it("PATCH - 404 for an comment_id that does not exist", () => {
+			// 	let vote = { inc_votes: 200 };
+			// 	return request(app)
+			// 		.patch("/api/comments/9999")
+			// 		.send(vote)
+			// 		.expect(404)
+			// 		.then((res) => {
+			// 			expect(res.body.msg).to.equal("Comment_id does not exist");
+			// 		});
+			// });
+			// it("PATCH - 400 for an invalid article_id", () => {
+			// 	let vote = { inc_votes: 200 };
+			// 	return request(app)
+			// 		.patch("/api/articles/INVALID-ARTICLE_ID")
+			// 		.send(vote)
+			// 		.expect(400)
+			// 		.then((res) => {
+			// 			expect(res.body.msg).to.equal("Invalid article_id");
+			// 		});
+			// });
+			// it("PATCH - 422 for missing inc_votes data", () => {
+			// 	return request(app)
+			// 		.patch("/api/articles/2")
+			// 		.expect(422)
+			// 		.then((res) => {
+			// 			expect(res.body.msg).to.equal("No data for changing votes given");
+			// 		});
+			// });
+			// it("PATCH - 422 for invalid inc_votes data", () => {
+			// 	let vote = { inc_votes: "Invalid_ENTRY" };
+			// 	return request(app)
+			// 		.patch("/api/articles/2")
+			// 		.send(vote)
+			// 		.expect(422)
+			// 		.then((res) => {
+			// 			expect(res.body.msg).to.equal("No data for changing votes given");
+			// 		});
+			// });
+			it("DELETE - 204 when successfuly deleted a comment", () => {
+				return request(app)
+					.delete("/api/comments/1")
+					.expect(204);
+			});
+		});
 	});
 });
 
