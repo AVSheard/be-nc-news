@@ -91,14 +91,23 @@ const postArticleComment = (id, commentInfo) => {
 };
 
 const getArticleComments = (id, sort_by = "created_at", order = "desc") => {
-	return connection
-		.select("*")
-		.from("comments")
-		.where("article_id", id)
-		.orderBy(sort_by, order)
-		.catch((err) => {
-			return Promise.reject({ status: 400, msg: "Bad Request" });
-		});
+	if (isNaN(Number(id))) {
+		return Promise.reject({ status: 400, msg: "Bad Request" });
+	}
+	return doesItemExist(id, "article_id", "articles").then((bool) => {
+		if (!bool) {
+			return Promise.reject({ status: 404, msg: "Article_id does not exist" });
+		} else {
+			return connection
+				.select("*")
+				.from("comments")
+				.where("article_id", id)
+				.orderBy(sort_by, order)
+				.catch((err) => {
+					return Promise.reject({ status: 400, msg: "Bad Request" });
+				});
+		}
+	});
 };
 
 const getArticles = (
@@ -126,11 +135,6 @@ const getArticles = (
 			}
 		})
 		.then((articles) => {
-			if (articles.length === 0 && reqAuthor) {
-				return Promise.reject({ status: 404, msg: "Author does not exist" });
-			} else if (articles.length === 0 && reqTopic) {
-				return Promise.reject({ status: 404, msg: "Topic does not exist" });
-			}
 			articles.forEach((article) => {
 				delete article.body;
 			});

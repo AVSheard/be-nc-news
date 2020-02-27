@@ -46,12 +46,6 @@ const requestArticleComments = (request, response, next) => {
 		request.query.order
 	)
 		.then((articleComments) => {
-			if (articleComments.length === 0) {
-				return Promise.reject({
-					status: 404,
-					msg: "Article_id does not exist"
-				});
-			}
 			response.status(200).send({ comments: articleComments });
 		})
 		.catch((err) => {
@@ -60,12 +54,27 @@ const requestArticleComments = (request, response, next) => {
 };
 
 const requestArticles = (request, response, next) => {
-	getArticles(
-		request.query.sort_by,
-		request.query.order,
-		request.query.author,
-		request.query.topic
-	)
+	const author = request.query.author;
+	const topic = request.query.topic;
+	let authorReal = true;
+	let topicReal = true;
+	if (author) authorReal = doesItemExist(author, "username", "users");
+	if (topic) topicReal = doesItemExist(topic, "slug", "topics");
+	return Promise.all([authorReal, topicReal])
+		.then((bools) => {
+			if (author && !bools[0]) {
+				return Promise.reject({ status: 404, msg: "Author does not exist" });
+			} else if (topic && !bools[1]) {
+				return Promise.reject({ status: 404, msg: "Topic does not exist" });
+			} else {
+				return getArticles(
+					request.query.sort_by,
+					request.query.order,
+					author,
+					topic
+				);
+			}
+		})
 		.then((sortedArticles) => {
 			response.status(200).send({ articles: sortedArticles });
 		})

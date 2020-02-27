@@ -397,7 +397,7 @@ describe("/api", () => {
 		// 			expect(res.body.msg).to.equal("Invalid sort_by method");
 		// 		});
 		// });
-		describe.only("/comments", () => {
+		describe("/comments", () => {
 			it("PATCH - 201 when changed the vote on a comment", () => {
 				const vote = { inc_votes: 1 };
 				return request(app)
