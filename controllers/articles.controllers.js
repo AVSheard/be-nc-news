@@ -39,19 +39,11 @@ const uploadArticleComment = (request, response, next) => {
 };
 
 const requestArticleComments = (request, response, next) => {
-	let sort_by;
-	let order;
-	if (request.query.sort_by) {
-		sort_by = request.query.sort_by;
-	} else {
-		sort_by = "created_at";
-	}
-	if (request.query.order) {
-		order = request.query.order;
-	} else {
-		order = "desc";
-	}
-	getArticleComments(request.params.article_id, sort_by, order)
+	getArticleComments(
+		request.params.article_id,
+		request.query.sort_by,
+		request.query.order
+	)
 		.then((articleComments) => {
 			if (articleComments.length === 0) {
 				return Promise.reject({
@@ -67,7 +59,18 @@ const requestArticleComments = (request, response, next) => {
 };
 
 const requestArticles = (request, response, next) => {
-	getArticles();
+	getArticles(
+		request.query.sort_by,
+		request.query.order,
+		request.query.author,
+		request.query.topic
+	)
+		.then((sortedArticles) => {
+			response.status(200).send({ articles: sortedArticles });
+		})
+		.catch((err) => {
+			next(err);
+		});
 };
 
 module.exports = {

@@ -89,7 +89,7 @@ const postArticleComment = (id, commentInfo) => {
 		});
 };
 
-const getArticleComments = (id, sort_by, order) => {
+const getArticleComments = (id, sort_by = "created_at", order = "desc") => {
 	return connection
 		.select("*")
 		.from("comments")
@@ -100,7 +100,32 @@ const getArticleComments = (id, sort_by, order) => {
 		});
 };
 
-const getArticles = () => {};
+const getArticles = (
+	sort_by = "created_at",
+	order = "desc",
+	reqAuthor,
+	reqTopic
+) => {
+	return connection
+		.select("articles.*")
+		.from("articles")
+		.orderBy(sort_by, order)
+		.leftJoin("comments", "articles.article_id", "=", "comments.article_id")
+		.groupBy("articles.article_id")
+		.count({ comment_count: "comments.article_id" })
+		.modify((query1) => {
+			if (reqAuthor) {
+				query1.where("articles.author", reqAuthor);
+			}
+			if (reqTopic) {
+				query1.where("articles.topic", reqTopic);
+			}
+		})
+		.then((articles) => {
+			articles.forEach((article) => delete article.body);
+			return articles;
+		});
+};
 
 module.exports = {
 	getArticle,

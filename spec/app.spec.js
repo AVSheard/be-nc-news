@@ -297,12 +297,12 @@ describe("/api", () => {
 					expect(res.body.msg).to.equal("Bad Request");
 				});
 		});
-		it.only("GET - 200 when returning the articles", () => {
+		it("GET - 200 when returning the articles", () => {
 			return request(app)
 				.get("/api/articles")
 				.expect(200)
 				.then((res) => {
-					res.body.artics.forEach((comment) => {
+					res.body.articles.forEach((comment) => {
 						expect(comment).to.have.all.keys([
 							"author",
 							"title",
@@ -312,6 +312,55 @@ describe("/api", () => {
 							"article_id",
 							"comment_count"
 						]);
+					});
+				});
+		});
+		it("GET - 200 returns articles in descending order by date as default", () => {
+			return request(app)
+				.get("/api/articles")
+				.expect(200)
+				.then((res) => {
+					expect(res.body.articles).to.be.sortedBy("created_at", {
+						descending: true
+					});
+				});
+		});
+		it("GET - 200 returns articles in ascending order by author", () => {
+			return request(app)
+				.get("/api/articles/?sort_by=author&order=asc")
+				.expect(200)
+				.then((res) => {
+					expect(res.body.articles).to.be.sortedBy("author");
+				});
+		});
+		it("GET - 200 returns articles and filters by author", () => {
+			return request(app)
+				.get("/api/articles/?author=butter_bridge")
+				.expect(200)
+				.then((res) => {
+					res.body.articles.forEach((article) => {
+						expect(article.author).to.equal("butter_bridge");
+					});
+				});
+		});
+		it("GET - 200 returns articles and filters by topic", () => {
+			return request(app)
+				.get("/api/articles/?topic=mitch")
+				.expect(200)
+				.then((res) => {
+					res.body.articles.forEach((article) => {
+						expect(article.topic).to.equal("mitch");
+					});
+				});
+		});
+		it.only("GET - 200 returns articles and filters by topic and author", () => {
+			return request(app)
+				.get("/api/articles/?topic=mitch&author=butter_bridge")
+				.expect(200)
+				.then((res) => {
+					res.body.articles.forEach((article) => {
+						expect(article.topic).to.equal("mitch");
+						expect(article.author).to.equal("butter_bridge");
 					});
 				});
 		});
