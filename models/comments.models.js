@@ -5,7 +5,7 @@ const { doesItemExist } = require("./middleWare.models");
 
 const patchComment = (id, votesChange) => {
 	if (isNaN(Number(id))) {
-		return Promise.reject({ status: 400, msg: "Invalid article_id" });
+		return Promise.reject({ status: 400, msg: "Invalid comment_id" });
 	} else if (!votesChange) {
 		return Promise.reject({
 			status: 422,
@@ -44,9 +44,20 @@ const patchComment = (id, votesChange) => {
 };
 
 const deleteComment = (id) => {
-	return connection("comments")
-		.where("comment_id", id)
-		.del();
+	if (isNaN(Number(id))) {
+		return Promise.reject({ status: 400, msg: "Invalid comment_id" });
+	}
+	return doesItemExist(id, "comment_id", "comments").then((bool) => {
+		if (!bool) {
+			return Promise.reject({
+				status: 404,
+				msg: "Comment_id does not exist"
+			});
+		}
+		return connection("comments")
+			.where("comment_id", id)
+			.del();
+	});
 };
 
 module.exports = { patchComment, deleteComment };

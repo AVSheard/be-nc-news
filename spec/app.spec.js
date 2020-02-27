@@ -451,7 +451,7 @@ describe("/api", () => {
 					.send(vote)
 					.expect(400)
 					.then((res) => {
-						expect(res.body.msg).to.equal("Invalid article_id");
+						expect(res.body.msg).to.equal("Invalid comment_id");
 					});
 			});
 			it("PATCH - 422 for missing inc_votes data", () => {
@@ -480,6 +480,22 @@ describe("/api", () => {
 				return request(app)
 					.delete("/api/comments/1")
 					.expect(204);
+			});
+			it("DELETE - 404 for an comment_id that does not exist", () => {
+				return request(app)
+					.delete("/api/comments/9999")
+					.expect(404)
+					.then((res) => {
+						expect(res.body.msg).to.equal("Comment_id does not exist");
+					});
+			});
+			it("DELETE - 400 for an invalid article_id", () => {
+				return request(app)
+					.delete("/api/comments/INVALID-ARTICLE_ID")
+					.expect(400)
+					.then((res) => {
+						expect(res.body.msg).to.equal("Invalid comment_id");
+					});
 			});
 		});
 	});
