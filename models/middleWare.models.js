@@ -13,4 +13,17 @@ const doesItemExist = (item, column, table) => {
 		});
 };
 
-module.exports = { doesItemExist };
+const doesColumnExist = (column, table) => {
+	return connection
+		.select("*")
+		.from(table)
+		.where(column)
+		.then(() => {
+			return true;
+		})
+		.catch((err) => {
+			return false;
+		});
+};
+
+module.exports = { doesItemExist, doesColumnExist };

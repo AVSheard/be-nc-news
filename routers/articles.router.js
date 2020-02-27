@@ -8,17 +8,23 @@ const {
 	uploadArticleComment,
 	requestArticles
 } = require("../controllers/articles.controllers");
+const { invalidMethod } = require("../errors/errors");
 
 articlesRouter
 	.route("/:article_id")
 	.get(requestArticle)
-	.patch(updateArticle);
+	.patch(updateArticle)
+	.all(invalidMethod);
 
 articlesRouter
 	.route("/:article_id/comments")
 	.get(requestArticleComments)
-	.post(uploadArticleComment);
+	.post(uploadArticleComment)
+	.all(invalidMethod);
 
-articlesRouter.route("/").get(requestArticles);
+articlesRouter
+	.route("/")
+	.get(requestArticles)
+	.all(invalidMethod);
 
 module.exports = articlesRouter;

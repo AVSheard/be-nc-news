@@ -118,21 +118,45 @@ const getArticles = (
 ) => {
 	if (order !== "desc" && order !== "asc") {
 		return Promise.reject({ status: 400, msg: "Invalid order method" });
+	} else if (
+		sort_by !== "created_at" &&
+		sort_by !== "author" &&
+		sort_by !== "title" &&
+		sort_by !== "article_id" &&
+		sort_by !== "topic" &&
+		sort_by !== "votes" &&
+		sort_by !== "comment_count"
+	) {
+		return Promise.reject({ status: 400, msg: "Invalid sort_by method" });
 	}
-	return connection
-		.select("articles.*")
-		.from("articles")
-		.orderBy(sort_by, order)
-		.leftJoin("comments", "articles.article_id", "=", "comments.article_id")
-		.groupBy("articles.article_id")
-		.count({ comment_count: "comments.article_id" })
-		.modify((query1) => {
-			if (reqAuthor) {
-				query1.where("articles.author", reqAuthor);
+
+	let authorReal = true;
+	let topicReal = true;
+	if (reqAuthor) authorReal = doesItemExist(reqAuthor, "username", "users");
+	if (reqTopic) topicReal = doesItemExist(reqTopic, "slug", "topics");
+	return Promise.all([authorReal, topicReal])
+		.then((bools) => {
+			if (reqAuthor && !bools[0]) {
+				return Promise.reject({ status: 404, msg: "Author does not exist" });
+			} else if (reqTopic && !bools[1]) {
+				return Promise.reject({ status: 404, msg: "Topic does not exist" });
 			}
-			if (reqTopic) {
-				query1.where("articles.topic", reqTopic);
-			}
+
+			return connection
+				.select("articles.*")
+				.from("articles")
+				.orderBy(sort_by, order)
+				.leftJoin("comments", "articles.article_id", "=", "comments.article_id")
+				.groupBy("articles.article_id")
+				.count({ comment_count: "comments.article_id" })
+				.modify((query1) => {
+					if (reqAuthor) {
+						query1.where("articles.author", reqAuthor);
+					}
+					if (reqTopic) {
+						query1.where("articles.topic", reqTopic);
+					}
+				});
 		})
 		.then((articles) => {
 			articles.forEach((article) => {

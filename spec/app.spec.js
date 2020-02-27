@@ -5,7 +5,10 @@ const chai = require("chai");
 const { expect } = chai;
 const request = require("supertest");
 const app = require("../app");
-const { doesItemExist } = require("../models/middleWare.models");
+const {
+	doesItemExist,
+	doesColumnExist
+} = require("../models/middleWare.models");
 const connection = require("../db/connection");
 chai.use(require("sams-chai-sorted"));
 
@@ -389,14 +392,14 @@ describe("/api", () => {
 					expect(res.body.msg).to.equal("Invalid order method");
 				});
 		});
-		// it.only("GET - 400 for requesting a sort_by that does not exist", () => {
-		// 	return request(app)
-		// 		.get("/api/articles?sort_by=NOT_A_COLUMN")
-		// 		.expect(400)
-		// 		.then((res) => {
-		// 			expect(res.body.msg).to.equal("Invalid sort_by method");
-		// 		});
-		// });
+		it("GET - 400 for requesting a sort_by that does not exist", () => {
+			return request(app)
+				.get("/api/articles?sort_by=NOT_A_COLUMN")
+				.expect(400)
+				.then((res) => {
+					expect(res.body.msg).to.equal("Invalid sort_by method");
+				});
+		});
 		describe("/comments", () => {
 			it("PATCH - 201 when changed the vote on a comment", () => {
 				const vote = { inc_votes: 1 };
@@ -501,25 +504,118 @@ describe("/api", () => {
 	});
 });
 
-// describe("middleWare", () => {
-// 	beforeEach(() => connection.seed.run());
-// 	after(() => connection.destroy());
+describe("middleWare", () => {
+	beforeEach(() => connection.seed.run());
+	after(() => connection.destroy());
 
-// 	describe("doesItemExist", () => {
-// 		it("returns a boolean when passed three srings", () => {
-// 			return doesItemExist("paper", "slug", "topics").then((actual) => {
-// 				expect(typeof actual).to.equal("boolean");
-// 			});
-// 		});
-// 		it("returns true when the item exists", () => {
-// 			return doesItemExist("paper", "slug", "topics").then((actual) => {
-// 				expect(actual).to.equal(true);
-// 			});
-// 		});
-// 		it("returns false when the item does not exists", () => {
-// 			return doesItemExist("NOT-AN-ITEM", "slug", "topics").then((actual) => {
-// 				expect(actual).to.equal(false);
-// 			});
-// 		});
-// 	});
-// });
+	// describe("doesItemExist", () => {
+	// 	it("returns a boolean when passed three srings", () => {
+	// 		return doesItemExist("paper", "slug", "topics").then((actual) => {
+	// 			expect(typeof actual).to.equal("boolean");
+	// 		});
+	// 	});
+	// 	it("returns true when the item exists", () => {
+	// 		return doesItemExist("paper", "slug", "topics").then((actual) => {
+	// 			expect(actual).to.equal(true);
+	// 		});
+	// 	});
+	// 	it("returns false when the item does not exists", () => {
+	// 		return doesItemExist("NOT-AN-ITEM", "slug", "topics").then((actual) => {
+	// 			expect(actual).to.equal(false);
+	// 		});
+	// 	});
+	// });
+
+	// describe("doesColumnExist", () => {
+	// 	it("returns a boolean when passed two strings", () => {
+	// 		return doesColumnExist("slug", "topics").then((actual) => {
+	// 			expect(typeof actual).to.equal("boolean");
+	// 		});
+	// 	});
+	// 	it("returns true when the column exists", () => {
+	// 		return doesColumnExist("slug", "topics").then((actual) => {
+	// 			expect(actual).to.equal(true);
+	// 		});
+	// 	});
+	// 	it("returns false when the column does not exists", () => {
+	// 		return doesItemExist("NOT-AN-COLUMN", "topics").then((actual) => {
+	// 			expect(actual).to.equal(false);
+	// 		});
+	// 	});
+	// });
+});
+
+describe.only("invalid methods", () => {
+	it("405 for invalid methods on api/users/:username", () => {
+		const invalidMethods = ["patch", "put", "delete", "post"];
+		const methodPromises = invalidMethods.map((method) => {
+			return request(app)
+				[method]("/api/users/butter_bridge")
+				.expect(405)
+				.then(({ body: { msg } }) => {
+					expect(msg).to.equal("method not allowed");
+				});
+		});
+		return Promise.all(methodPromises);
+	});
+	it("405 for invalid methods on api/topics", () => {
+		const invalidMethods = ["patch", "put", "delete", "post"];
+		const methodPromises = invalidMethods.map((method) => {
+			return request(app)
+				[method]("/api/topics")
+				.expect(405)
+				.then(({ body: { msg } }) => {
+					expect(msg).to.equal("method not allowed");
+				});
+		});
+		return Promise.all(methodPromises);
+	});
+	it("405 for invalid methods on api/articles/:id", () => {
+		const invalidMethods = ["put", "delete", "post"];
+		const methodPromises = invalidMethods.map((method) => {
+			return request(app)
+				[method]("/api/articles/1")
+				.expect(405)
+				.then(({ body: { msg } }) => {
+					expect(msg).to.equal("method not allowed");
+				});
+		});
+		return Promise.all(methodPromises);
+	});
+	it("405 for invalid methods on api/articles/:id/comments", () => {
+		const invalidMethods = ["put", "delete", "patch"];
+		const methodPromises = invalidMethods.map((method) => {
+			return request(app)
+				[method]("/api/articles/1/comments")
+				.expect(405)
+				.then(({ body: { msg } }) => {
+					expect(msg).to.equal("method not allowed");
+				});
+		});
+		return Promise.all(methodPromises);
+	});
+	it("405 for invalid methods on api/articles", () => {
+		const invalidMethods = ["put", "delete", "patch", "post"];
+		const methodPromises = invalidMethods.map((method) => {
+			return request(app)
+				[method]("/api/articles")
+				.expect(405)
+				.then(({ body: { msg } }) => {
+					expect(msg).to.equal("method not allowed");
+				});
+		});
+		return Promise.all(methodPromises);
+	});
+	it("405 for invalid methods on api/comments/:comment_id", () => {
+		const invalidMethods = ["put", "post", "get"];
+		const methodPromises = invalidMethods.map((method) => {
+			return request(app)
+				[method]("/api/comments/1")
+				.expect(405)
+				.then(({ body: { msg } }) => {
+					expect(msg).to.equal("method not allowed");
+				});
+		});
+		return Promise.all(methodPromises);
+	});
+});
