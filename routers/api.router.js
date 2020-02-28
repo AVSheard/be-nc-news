@@ -5,6 +5,7 @@ const articlesRouter = require("./articles.router");
 const commentsRouter = require("./comments.router");
 apiRouter = require("express").Router();
 const { invalidMethod } = require("../errors/errors");
+const { requestJSON } = require("../controllers/api.controllers");
 
 apiRouter.use("/topics", topicsRouter);
 
@@ -14,6 +15,9 @@ apiRouter.use("/articles", articlesRouter);
 
 apiRouter.use("/comments", commentsRouter);
 
-apiRouter.route("/").all(invalidMethod);
+apiRouter
+	.route("/")
+	.get(requestJSON)
+	.all(invalidMethod);
 
 module.exports = apiRouter;
