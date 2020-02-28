@@ -11,7 +11,7 @@ const getUser = (userUsername) => {
 		.then((requestedUser) => {
 			if (requestedUser.length === 0) {
 				return Promise.reject({ status: 404, msg: "Username does not exist" });
-			} else return { user: requestedUser };
+			} else return requestedUser[0];
 		});
 };
 

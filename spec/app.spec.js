@@ -29,13 +29,13 @@ describe("/api", () => {
 		});
 	});
 
-	describe("/user", () => {
+	describe.only("/user", () => {
 		it("GET - 200 for sucessful request for a user by username", () => {
 			return request(app)
 				.get("/api/users/butter_bridge")
 				.expect(200)
 				.then((res) => {
-					expect(res.body.user.user[0]).to.have.all.keys([
+					expect(res.body.user).to.have.all.keys([
 						"username",
 						"avatar_url",
 						"name"
@@ -578,7 +578,7 @@ describe("middleWare", () => {
 	// });
 });
 
-describe.only("invalid methods", () => {
+describe("invalid methods", () => {
 	it("405 for invalid methods on api/users/:username", () => {
 		const invalidMethods = ["patch", "put", "delete", "post"];
 		const methodPromises = invalidMethods.map((method) => {
