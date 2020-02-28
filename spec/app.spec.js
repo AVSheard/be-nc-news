@@ -652,7 +652,7 @@ describe("invalid methods", () => {
 		return Promise.all(methodPromises);
 	});
 	it("405 for invalid methods on api", () => {
-		const invalidMethods = ["put", "post", "get", "delete", "patch"];
+		const invalidMethods = ["put", "post", "delete", "patch"];
 		const methodPromises = invalidMethods.map((method) => {
 			return request(app)
 				[method]("/api")
