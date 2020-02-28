@@ -4,8 +4,8 @@ const { patchComment, deleteComment } = require("../models/comments.models");
 
 const updateComment = (request, response, next) => {
 	patchComment(request.params.comment_id, request.body.inc_votes)
-		.then((patchedComment) => {
-			response.status(200).send({ comment: patchedComment[0] });
+		.then((comment) => {
+			response.status(200).send({ comment });
 		})
 		.catch((err) => {
 			next(err);

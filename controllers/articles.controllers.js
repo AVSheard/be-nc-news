@@ -21,8 +21,8 @@ const requestArticle = (request, response, next) => {
 
 const updateArticle = (request, response, next) => {
 	patchArticle(request.params.article_id, request.body.inc_votes)
-		.then((updatedArticle) => {
-			response.status(200).send({ article: updatedArticle });
+		.then((article) => {
+			response.status(200).send({ article });
 		})
 		.catch((err) => {
 			next(err);
@@ -31,8 +31,8 @@ const updateArticle = (request, response, next) => {
 
 const uploadArticleComment = (request, response, next) => {
 	postArticleComment(request.params.article_id, request.body)
-		.then((insertedComment) => {
-			response.status(201).send({ comment: insertedComment[0] });
+		.then((comment) => {
+			response.status(201).send({ comment });
 		})
 		.catch((err) => {
 			next(err);
@@ -45,8 +45,8 @@ const requestArticleComments = (request, response, next) => {
 		request.query.sort_by,
 		request.query.order
 	)
-		.then((articleComments) => {
-			response.status(200).send({ comments: articleComments });
+		.then((comments) => {
+			response.status(200).send({ comments });
 		})
 		.catch((err) => {
 			next(err);
@@ -57,8 +57,8 @@ const requestArticles = (request, response, next) => {
 	const author = request.query.author;
 	const topic = request.query.topic;
 	return getArticles(request.query.sort_by, request.query.order, author, topic)
-		.then((sortedArticles) => {
-			response.status(200).send({ articles: sortedArticles });
+		.then((articles) => {
+			response.status(200).send({ articles });
 		})
 		.catch((err) => {
 			next(err);

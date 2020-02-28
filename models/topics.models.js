@@ -6,10 +6,7 @@ const getAllTopics = () => {
 	return connection
 		.select("*")
 		.from("topics")
-		.returning("*")
-		.then((requestedTopics) => {
-			return { topics: requestedTopics };
-		});
+		.returning("*");
 };
 
 module.exports = { getAllTopics };

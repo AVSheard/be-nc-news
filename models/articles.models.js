@@ -80,6 +80,9 @@ const postArticleComment = (id, commentInfo) => {
 		.into("comments")
 		.insert(insertInfo)
 		.returning("*")
+		.then((comment) => {
+			return comment[0];
+		})
 		.catch((err) => {
 			if (isNaN(Number(id))) {
 				return Promise.reject({ status: 400, msg: "Invalid article_id" });

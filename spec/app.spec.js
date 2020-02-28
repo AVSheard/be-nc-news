@@ -29,7 +29,7 @@ describe("/api", () => {
 		});
 	});
 
-	describe.only("/user", () => {
+	describe("/user", () => {
 		it("GET - 200 for sucessful request for a user by username", () => {
 			return request(app)
 				.get("/api/users/butter_bridge")

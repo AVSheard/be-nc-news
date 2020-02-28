@@ -36,7 +36,10 @@ const patchComment = (id, votesChange) => {
 			return connection
 				.select("*")
 				.from("comments")
-				.where("comment_id", id);
+				.where("comment_id", id)
+				.then((comment) => {
+					return comment[0];
+				});
 		});
 };
 
