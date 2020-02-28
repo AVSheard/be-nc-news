@@ -12,7 +12,7 @@ const { doesItemExist } = require("../models/middleWare.models");
 const requestArticle = (request, response, next) => {
 	getArticle(request.params.article_id)
 		.then((article) => {
-			response.status(200).send({ user: article });
+			response.status(200).send({ article });
 		})
 		.catch((err) => {
 			next(err);
@@ -22,7 +22,7 @@ const requestArticle = (request, response, next) => {
 const updateArticle = (request, response, next) => {
 	patchArticle(request.params.article_id, request.body.inc_votes)
 		.then((updatedArticle) => {
-			response.status(201).send({ article: updatedArticle });
+			response.status(200).send({ article: updatedArticle });
 		})
 		.catch((err) => {
 			next(err);

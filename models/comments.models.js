@@ -6,14 +6,11 @@ const { doesItemExist } = require("./middleWare.models");
 const patchComment = (id, votesChange) => {
 	if (isNaN(Number(id))) {
 		return Promise.reject({ status: 400, msg: "Invalid comment_id" });
-	} else if (!votesChange) {
-		return Promise.reject({
-			status: 422,
-			msg: "No data for changing votes has been given"
-		});
+	} else if (votesChange === undefined) {
+		votesChange = 0;
 	} else if (isNaN(Number(votesChange))) {
 		return Promise.reject({
-			status: 422,
+			status: 400,
 			msg: "Invalid data for changing votes given"
 		});
 	}

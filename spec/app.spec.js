@@ -35,7 +35,7 @@ describe("/api", () => {
 				.get("/api/users/butter_bridge")
 				.expect(200)
 				.then((res) => {
-					expect(res.body.user[0]).to.have.all.keys([
+					expect(res.body.user.user[0]).to.have.all.keys([
 						"username",
 						"avatar_url",
 						"name"
@@ -58,7 +58,24 @@ describe("/api", () => {
 				.get("/api/articles/1")
 				.expect(200)
 				.then((res) => {
-					expect(res.body.user).to.have.all.keys([
+					expect(res.body.article).to.have.all.keys([
+						"author",
+						"title",
+						"article_id",
+						"body",
+						"topic",
+						"created_at",
+						"votes",
+						"comment_count"
+					]);
+				});
+		});
+		it("GET - 200 for requesting an article by article_id works for more then one article id", () => {
+			return request(app)
+				.get("/api/articles/2")
+				.expect(200)
+				.then((res) => {
+					expect(res.body.article).to.have.all.keys([
 						"author",
 						"title",
 						"article_id",
@@ -86,11 +103,11 @@ describe("/api", () => {
 					expect(res.body.msg).to.equal("Invalid article_id");
 				});
 		});
-		it("PATCH - 201 for a request that the votes are changed on an article", () => {
+		it("PATCH - 200 for a request that the votes are changed on an article", () => {
 			let vote = { inc_votes: 200 };
 			return request(app)
 				.patch("/api/articles/1")
-				.expect(201)
+				.expect(200)
 				.send(vote)
 				.then((res) => {
 					expect(res.body.article).to.have.all.keys([
@@ -126,20 +143,30 @@ describe("/api", () => {
 					expect(res.body.msg).to.equal("Invalid article_id");
 				});
 		});
-		it("PATCH - 422 for missing inc_votes data", () => {
+		it("PATCH - 200 with unchanged artile if inc_votes value is missing", () => {
 			return request(app)
-				.patch("/api/articles/2")
-				.expect(422)
+				.patch("/api/articles/1")
+				.expect(200)
 				.then((res) => {
-					expect(res.body.msg).to.equal("No data for changing votes given");
+					expect(res.body.article).to.have.all.keys([
+						"author",
+						"title",
+						"article_id",
+						"body",
+						"topic",
+						"created_at",
+						"votes",
+						"comment_count"
+					]);
+					expect(res.body.article.votes).to.equal(100);
 				});
 		});
-		it("PATCH - 422 for invalid inc_votes data", () => {
+		it("PATCH - 400 for invalid inc_votes data", () => {
 			let vote = { inc_votes: "Invalid_ENTRY" };
 			return request(app)
 				.patch("/api/articles/2")
 				.send(vote)
-				.expect(422)
+				.expect(400)
 				.then((res) => {
 					expect(res.body.msg).to.equal("No data for changing votes given");
 				});
@@ -192,34 +219,34 @@ describe("/api", () => {
 					expect(res.body.msg).to.equal("Invalid article_id");
 				});
 		});
-		it("POST - 422 when body is missing from request body", () => {
+		it("POST - 400 when body is missing from request body", () => {
 			let commentInfo = {
 				body: "I wanted to say something"
 			};
 			return request(app)
 				.post("/api/articles/2/comments")
 				.send(commentInfo)
-				.expect(422)
+				.expect(400)
 				.then((res) => {
 					expect(res.body.msg).to.equal("Incomplete data for creating comment");
 				});
 		});
-		it("POST - 422 when username is missing from request body", () => {
+		it("POST - 400 when username is missing from request body", () => {
 			let commentInfo = {
 				username: "butter_bridge"
 			};
 			return request(app)
 				.post("/api/articles/2/comments")
 				.send(commentInfo)
-				.expect(422)
+				.expect(400)
 				.then((res) => {
 					expect(res.body.msg).to.equal("Incomplete data for creating comment");
 				});
 		});
-		it("POST - 422 when request body is missing", () => {
+		it("POST - 400 when request body is missing", () => {
 			return request(app)
 				.post("/api/articles/2/comments")
-				.expect(422)
+				.expect(400)
 				.then((res) => {
 					expect(res.body.msg).to.equal("Incomplete data for creating comment");
 				});
@@ -401,12 +428,12 @@ describe("/api", () => {
 				});
 		});
 		describe("/comments", () => {
-			it("PATCH - 201 when changed the vote on a comment", () => {
+			it("PATCH - 200 when changed the vote on a comment", () => {
 				const vote = { inc_votes: 1 };
 				return request(app)
 					.patch("/api/comments/1")
 					.send(vote)
-					.expect(201)
+					.expect(200)
 					.then((res) => {
 						expect(res.body.comment).to.have.all.keys([
 							"author",
@@ -419,12 +446,12 @@ describe("/api", () => {
 						expect(res.body.comment.votes).to.equal(17);
 					});
 			});
-			it("PATCH - 201 when changed the vote on a comment negativley", () => {
+			it("PATCH - 200 when changed the vote on a comment negativley", () => {
 				const vote = { inc_votes: -3 };
 				return request(app)
 					.patch("/api/comments/1")
 					.send(vote)
-					.expect(201)
+					.expect(200)
 					.then((res) => {
 						expect(res.body.comment).to.have.all.keys([
 							"author",
@@ -457,22 +484,28 @@ describe("/api", () => {
 						expect(res.body.msg).to.equal("Invalid comment_id");
 					});
 			});
-			it("PATCH - 422 for missing inc_votes data", () => {
+			it("PATCH - 200 for missing inc_votes data", () => {
 				return request(app)
-					.patch("/api/comments/2")
-					.expect(422)
+					.patch("/api/comments/1")
+					.expect(200)
 					.then((res) => {
-						expect(res.body.msg).to.equal(
-							"No data for changing votes has been given"
-						);
+						expect(res.body.comment).to.have.all.keys([
+							"author",
+							"created_at",
+							"votes",
+							"article_id",
+							"body",
+							"comment_id"
+						]);
+						expect(res.body.comment.votes).to.equal(16);
 					});
 			});
-			it("PATCH - 422 for invalid inc_votes data", () => {
+			it("PATCH - 400 for invalid inc_votes data", () => {
 				let vote = { inc_votes: "Invalid_ENTRY" };
 				return request(app)
 					.patch("/api/comments/2")
 					.send(vote)
-					.expect(422)
+					.expect(400)
 					.then((res) => {
 						expect(res.body.msg).to.equal(
 							"Invalid data for changing votes given"
@@ -611,6 +644,18 @@ describe.only("invalid methods", () => {
 		const methodPromises = invalidMethods.map((method) => {
 			return request(app)
 				[method]("/api/comments/1")
+				.expect(405)
+				.then(({ body: { msg } }) => {
+					expect(msg).to.equal("method not allowed");
+				});
+		});
+		return Promise.all(methodPromises);
+	});
+	it("405 for invalid methods on api", () => {
+		const invalidMethods = ["put", "post", "get", "delete", "patch"];
+		const methodPromises = invalidMethods.map((method) => {
+			return request(app)
+				[method]("/api")
 				.expect(405)
 				.then(({ body: { msg } }) => {
 					expect(msg).to.equal("method not allowed");

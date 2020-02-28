@@ -35,9 +35,11 @@ const patchArticle = (id, voteChange) => {
 			status: 400,
 			msg: "Invalid article_id"
 		});
+	} else if (voteChange === undefined) {
+		voteChange = 0;
 	} else if (typeof voteChange !== "number") {
 		return Promise.reject({
-			status: 422,
+			status: 400,
 			msg: "No data for changing votes given"
 		});
 	}
@@ -64,7 +66,7 @@ const patchArticle = (id, voteChange) => {
 const postArticleComment = (id, commentInfo) => {
 	if (!commentInfo.username || !commentInfo.body) {
 		return Promise.reject({
-			status: 422,
+			status: 400,
 			msg: "Incomplete data for creating comment"
 		});
 	}
