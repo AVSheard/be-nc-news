@@ -535,6 +535,13 @@ describe("/api", () => {
 			});
 		});
 	});
+	describe("/", () => {
+		it("GET - can return a JSON body of api end points", () => {
+			return request(app)
+				.get("/api")
+				.expect(200);
+		});
+	});
 });
 
 describe("middleWare", () => {
