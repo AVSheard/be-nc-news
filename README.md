@@ -6,7 +6,7 @@ https://nc-news-anthony.herokuapp.com/ (as this repo is just a backend you will 
 
 ### Project summary
 
-This repo contains the backend for a redit style news app where users can login, read news articles and up/down vote them. They can do this by making GET, PATCH, POST and DELETE to a database all of which is handled here. A front end for this repo can be found here https://github.com/AVSheard/nc-news-frontend
+This repo contains the backend for a redit style news app where users can login, read news articles and up/down vote them. They can do this by making GET, PATCH, POST and DELETE to a database all of which is handled here. A front end for this repo can be found here: https://github.com/AVSheard/nc-news-frontend
 
 ### How to run this repo
 
