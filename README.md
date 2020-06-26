@@ -16,7 +16,13 @@ This repo contains the backend for a redit style news app where users can login,
 
 3. Paste the repo into the desired folder (Ctrl+alt+v), use the commands 'ls' and 'cd file_name' to navigate to the desired folder 
 
-4. Make sure you have Visual Studio Code downloaded on your computer (or similar coding program)
+4. Make sure you have Visual Studio Code (VS code) downloaded on your computer (or similar coding program)
+
+5. When in the new file in the terminal run the command 'code .' to open the repo
+
+6. Open a new terminal in VS code and run the command 'npm install' to install everything needed to run repo
+
+7. Make a knexfile.js file as detailed below. After this step you will be able to run the repo by using the command 'npm run' in the projects terminal. You will need to send your own requests to as this repo only contains the backend.
 
 ### Making a knexfile.js
 
