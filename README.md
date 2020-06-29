@@ -24,6 +24,8 @@ This repo contains the backend for a redit style news app where users can login,
 
 7. Make a knexfile.js file as detailed below. 
 
+8. Before being able to use this repo you will need to get it to create a database by using the command 'npm seed'. Run this command again to revert the database back to its default setting. 
+
 ?. Finally you will be able to run the repo by using the command 'npm run' in the projects terminal. You will need to send your own requests to as this repo only contains the backend.
 
 ### Making a knexfile.js
