@@ -22,7 +22,9 @@ This repo contains the backend for a redit style news app where users can login,
 
 6. Open a new terminal in VS code and run the command 'npm install' to install everything needed to run repo
 
-7. Make a knexfile.js file as detailed below. After this step you will be able to run the repo by using the command 'npm run' in the projects terminal. You will need to send your own requests to as this repo only contains the backend.
+7. Make a knexfile.js file as detailed below. 
+
+?. Finally you will be able to run the repo by using the command 'npm run' in the projects terminal. You will need to send your own requests to as this repo only contains the backend.
 
 ### Making a knexfile.js
 
