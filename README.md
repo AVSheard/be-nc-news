@@ -12,7 +12,7 @@ This repo contains the backend for a redit style news app where users can login,
 
 1. Make a copy of this repo by using the big green clone button at the top of this GitHub page
 
-2. Open up the terminal on ypur computer (Ctrl+t)
+2. Open up the terminal on your computer (Ctrl+t)
 
 3. Paste the repo into the desired folder (Ctrl+alt+v), use the commands 'ls' and 'cd file_name' to navigate to the desired folder 
 
@@ -26,7 +26,9 @@ This repo contains the backend for a redit style news app where users can login,
 
 8. Before being able to use this repo you will need to get it to create a database by using the command 'npm seed'. Run this command again to revert the database back to its default setting. 
 
-?. Finally you will be able to run the repo by using the command 'npm run' in the projects terminal. You will need to send your own requests to as this repo only contains the backend.
+9. To check that everything in the repo is woking corectly before starting run the command 'npm test'. If you get a message indicating that any of the tests have failed check that you have followed all the previouse steps correctly. After checking that you have followed all the previouse steps if tests are still failing then check you have not acidentily made any of your own changes to the repo.
+
+10. Finally you will be able to run the repo by using the command 'npm run' in the projects terminal. You will need to send your own requests to as this repo only contains the backend.
 
 ### Making a knexfile.js
 
