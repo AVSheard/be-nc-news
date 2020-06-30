@@ -22,7 +22,7 @@ This repo contains the backend for a redit style news app where users can login,
 
 6. Open a new terminal in VS code and run the command 'npm install' to install everything needed to run repo
 
-7. Make a knexfile.js file as detailed below. 
+7. Make a loginData.js file as detailed below. 
 
 8. Before being able to use this repo you will need to get it to create a database by using the command 'npm seed'. Run this command again to revert the database back to its default setting. 
 
@@ -30,6 +30,5 @@ This repo contains the backend for a redit style news app where users can login,
 
 10. Finally you will be able to run the repo by using the command 'npm run' in the projects terminal. You will need to send your own requests to as this repo only contains the backend.
 
-### Making a knexfile.js
+### Making a loginData.js file
 
-### Minimum requirements to run
