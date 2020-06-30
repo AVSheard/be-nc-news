@@ -32,3 +32,14 @@ This repo contains the backend for a redit style news app where users can login,
 
 ### Making a loginData.js file
 
+1. Make a blank file titled loginData.js in the main folder for the repo
+
+2. Copy the code below into the new file:
+
+```javascript
+const loginData = { username: "yourUserName", password: "yourPassword" };
+
+module.exports = loginData;
+```
+
+3. Replace yourUserName and yourPassword to your computers database username and password
