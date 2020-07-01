@@ -43,3 +43,9 @@ module.exports = loginData;
 ```
 
 3. Replace yourUserName and yourPassword to your computers database username and password
+
+### Requirements
+
+This repo has been designed to be run on a windows or OS operating system. 
+
+This repo has been built using Node.js v13.4.0, earlier versions of Node.js may not work.
