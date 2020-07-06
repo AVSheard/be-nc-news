@@ -14,7 +14,7 @@ This repo contains the backend for a reddit style news app where users can login
 
 2. Open up the terminal on your computer (Ctrl+t)
 
-3. Paste the repo into the desired folder (Ctrl+alt+v), use the commands 'ls' and 'cd file_name' to navigate to the desired folder 
+3. Paste the repo into the desired folder using the command 'git clone', use the commands 'ls' and 'cd file_name' to navigate to the desired folder 
 
 4. Make sure you have Visual Studio Code (VS code) downloaded on your computer (or similar coding program)
 
